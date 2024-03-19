@@ -166,6 +166,76 @@ class UserTest extends TestCase
 
     }
 
+    public function testUpdatePasswordSuccess(){
+        
+        $this->seed([UserSeeder::class]);
+        $oldUser = User::where('username', 'testtsts')->first();
 
+        $this->patch('/api/users/current', 
+            [
+                "password" => "baru"
+            ],
+            [ 
+                "Authorization" => "test"
+            ]
+            )->assertStatus(200)
+            ->assertJson([
+                "data" => [
+                    "username" => "testtsts",
+                    "name" => "test test test",
+                ]
+            ]);
+
+        $newUser = User::where('username', 'testtsts')->first();
+        self::assertNotEquals($oldUser->password, $newUser->password);
+
+    }
+
+    public function testUpdateNameSuccess(){
+
+        $this->seed([UserSeeder::class]);
+        $oldUser = User::where('username', 'testtsts')->first();
+
+        $this->patch('/api/users/current', 
+            [
+                "name" => "mahadi"
+            ],
+            [ 
+                "Authorization" => "test"
+            ]
+            )->assertStatus(200)
+            ->assertJson([
+                "data" => [
+                    "username" => "testtsts",
+                    "name" => "mahadi",
+                ]
+            ]);
+
+        $newUser = User::where('username', 'testtsts')->first();
+        self::assertNotEquals($oldUser->name, $newUser->name);
+
+    }
+
+
+    public function testUpdateFailed(){
+        $this->seed([UserSeeder::class]);
+
+        $this->patch('/api/users/current', 
+            [
+                "name" => "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Atque, ex totam debitis ad doloremque odio nobis odit sunt consectetur deserunt neque nemo repellendus optio, quas sapiente libero assumenda reiciendis sed maxime facere sint autem modi. Perferendis necessitatibus earum eligendi distinctio cumque ipsam consectetur culpa nesciunt a placeat. Esse accusamus exercitationem, sit alias, recusandae inventore quam impedit magnam quae, ratione similique quod. Saepe laudantium temporibus dolorum similique delectus consequatur dolor atque, libero architecto voluptas autem accusantium optio ullam placeat nulla ipsam ad corrupti porro esse? Impedit doloremque, voluptas ipsa praesentium aliquid reprehenderit error debitis! Quos vitae cumque numquam commodi ratione, mollitia unde non debitis velit, qui eligendi adipisci voluptate atque repudiandae, sed temporibus libero repellat explicabo. Nam sunt explicabo dolores neque"
+            ],
+            [ 
+                "Authorization" => "test"
+            ]
+            )->assertStatus(400)
+            ->assertJson([
+                "errors" => [
+                    "name" => [
+                        "The name field must not be greater than 100 characters."
+                    ]
+                ]
+            ]);
+
+    }
 
 }
