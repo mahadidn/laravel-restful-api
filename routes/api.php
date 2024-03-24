@@ -40,4 +40,8 @@ Route::middleware(ApiAuthMiddleware::class)->group(function(){
     Route::get('/contacts/{idContact}/addresses/{idAddresses}', [AddressController::class, 'get'])
         ->where('idContact', '[0-9]+')
         ->where('idAddress', '[0-9]+');
+
+    Route::put('/contacts/{idContact}/addresses/{idAddresses}', [AddressController::class, 'update'])
+        ->where('idContact', '[0-9]+')
+        ->where('idAddress', '[0-9]+');
 });
